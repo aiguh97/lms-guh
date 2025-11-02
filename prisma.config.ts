@@ -1,3 +1,4 @@
+import "dotenv/config"; // ← ini wajib, agar DATABASE_URL terbaca
 import { defineConfig, env } from "prisma/config";
 
 export default defineConfig({
