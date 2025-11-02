@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "prisma:generate": "prisma generate",
     "prebuild": "npm run prisma:generate",
-    "build": "next build --turbopack",
+    "build": "next build --no-lint --turbopack",
     "start": "next start",
     "lint": "eslint . --ext .js,.ts,.tsx --ignore-path .eslintignore"
   },
