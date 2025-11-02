@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "prisma:generate": "prisma generate",
-    "build": "npm run prisma:generate && next build --turbopack --no-lint",
+    "prebuild": "npm run prisma:generate",
+    "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint . --ext .js,.ts,.tsx --ignore-path .eslintignore"
   },
   "dependencies": {
     "@arcjet/inspect": "^1.0.0-beta.13",
