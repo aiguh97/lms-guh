@@ -15,8 +15,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           className: "absolute top-4 left-4 flex items-center gap-2",
         })}
       >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back</span>
+        <ArrowLeft className="w-4 h-4" />
+        <span>Back</span>
       </Link>
 
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -25,20 +25,18 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           className="flex items-center gap-2 self-center font-medium select-none"
         >
           {/* ✅ Pastikan alt & ukuran fix agar SSR dan client match */}
-          <Image
-            src={Logo}
-            alt="Logo"
-            width={32}
-            height={32}
-            priority
-          />
+          <Image src={Logo} alt="Logo" width={32} height={32} priority />
           <span>GuhLMS.</span>
         </Link>
 
         {children}
         <div className="text-balance text-center text-xs text-muted-foreground">
-          By clicking continue you agree to our <span className="hover:text-primary hover:underline"> Terms of service</span>
-          {" "} and Privacy Policy
+          By clicking continue you agree to our{" "}
+          <span className="hover:text-primary hover:underline">
+            {" "}
+            Terms of service
+          </span>{" "}
+          and Privacy Policy
         </div>
       </div>
     </div>
