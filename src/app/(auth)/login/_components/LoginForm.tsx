@@ -39,21 +39,27 @@ export function LoginForm() {
     });
   }
 
-  function signInWithEmail() {
+  async function signInWithEmail() {
     startEmailTransition(async () => {
-      await authClient.emailOtp.sendVerificationOtp({
-        email: email,
-        type: "sign-in",
-        fetchOptions: {
-          onSuccess: () => {
-            toast.success("Email sent");
-            router.push(`/verify-request?email=${email}`);
+      try {
+        await authClient.emailOtp.sendVerificationOtp({
+          email: email,
+          type: "sign-in",
+          fetchOptions: {
+            onSuccess: () => {
+              toast.success("Email sent");
+              router.push(`/verify-request?email=${email}`);
+            },
+            onError: (err) => {
+              console.error("Error sending email:", err);
+              toast.error("Error sending email");
+            },
           },
-          onError: () => {
-            toast.success("Error sending email");
-          },
-        },
-      });
+        });
+      } catch (err) {
+        console.error("Unexpected error:", err);
+        toast.error("Unexpected error sending email");
+      }
     });
   }
 
@@ -111,8 +117,8 @@ export function LoginForm() {
               </>
             ) : (
               <>
-              <Send className="size-4"/>
-              <span> Continue With Email</span>
+                <Send className="size-4" />
+                <span> Continue With Email</span>
               </>
             )}
           </Button>

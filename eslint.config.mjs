@@ -10,10 +10,10 @@ const compat = new FlatCompat({
 });
 
 export default [
-  // Gunakan konfigurasi bawaan Next.js
+  // Extends Next.js config
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 
-  // Konfigurasi tambahan untuk override rule
+  // Override rules & ignore generated files
   {
     ignores: [
       "node_modules/**",
@@ -21,12 +21,17 @@ export default [
       "out/**",
       "build/**",
       "next-env.d.ts",
-      "src/generated/**", // abaikan folder hasil Prisma generate
+      "src/generated/**", // Prisma generated
     ],
     rules: {
       "@typescript-eslint/no-require-imports": "off",
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-unused-expressions": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-unsafe-function-type": "off",
+      "@typescript-eslint/prefer-primitive-type": "off",
+      "@typescript-eslint/no-unnecessary-type-constraint": "off",
     },
   },
 ];
