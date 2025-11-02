@@ -2,6 +2,18 @@ import { object, z } from "zod";
 
 export const courseLevels = ["Beginner", "Intermediate", "Advanced"] as const;
 export const courseStatus = ["Draft", "Published", "Archived"] as const;
+export const courseCategories =[
+  "Development",
+  "Business",
+  "Finance",
+  "It & Software",
+  "Office productivity",
+
+  "Design",
+  "Marketing",
+  "Music",
+  "Teaching & Academics"
+]as const;
 
 export const courseSchema = z.object({
   title: z
@@ -15,7 +27,9 @@ export const courseSchema = z.object({
   price: z.number({ message: "Price is required" }),
   duration: z.number({ message: "Duration is required" }),
   level: z.enum(courseLevels, { message: "Level is required" }),
-  category: z.string(),
+  category: z.enum(courseCategories,{
+    message:'Category is required'
+  }),
   smallDescription: z
     .string()
     .min(3, { message: "description must be at least 3 characters length" })

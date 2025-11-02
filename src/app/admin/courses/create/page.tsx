@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,13 +8,36 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { courseSchema, CourseSchemaType } from "@/lib/zodSchemas";
-import { ArrowLeft } from "lucide-react";
+import {
+  courseCategories,
+  courseLevels,
+  courseSchema,
+  CourseSchemaType,
+  courseStatus,
+} from "@/lib/zodSchemas";
+import { ArrowLeft, PlusIcon, SparkleIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import slugify from "slugify";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { RichTextEditor } from "@/components/rich-text-editor/Editor";
 
 export default function CourseCreationPage() {
   const form = useForm<CourseSchemaType>({
@@ -26,7 +49,7 @@ export default function CourseCreationPage() {
       price: 0,
       duration: 0,
       level: "Beginner",
-      category: "",
+      category: "Music",
       status: "Draft",
       slug: "",
       smallDescription: "",
@@ -49,17 +72,16 @@ export default function CourseCreationPage() {
         <h1 className="text-2xl font-bold">Create Course</h1>
       </div>
 
-      {/* Form utama */}
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
-              <CardDescription>
-                Provide basic information about the course
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+      <Card>
+        <CardHeader>
+          <CardTitle>Basic Information</CardTitle>
+          <CardDescription>
+            Provide basic information about the course
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
                 name="title"
@@ -73,18 +95,230 @@ export default function CourseCreationPage() {
                   </FormItem>
                 )}
               />
-              {/* Tambahkan field lain sesuai courseSchema */}
-            </CardContent>
-          </Card>
 
-          <button
-            type="submit"
-            className={buttonVariants({ variant: "default", className: "mt-4" })}
-          >
-            Create Course
-          </button>
-        </form>
-      </Form>
+              {/* Slug */}
+              <div className="flex gap-4 items-end">
+                <FormField
+                  control={form.control}
+                  name="slug"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Slug</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Slug" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="button"
+                  className="w-fit"
+                  onClick={() => {
+                    const titleValue = form.getValues("title");
+                    const slug = slugify(titleValue);
+                    form.setValue("slug", slug, { shouldValidate: true });
+                  }}
+                >
+                  Generate Slug <SparkleIcon className="ml-1" size={16} />
+                </Button>
+              </div>
+
+              {/* Small Description */}
+              <FormField
+                control={form.control}
+                name="smallDescription"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Small Description</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        className="min-h-[120px]"
+                        placeholder="Small Description"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Description */}
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                    <RichTextEditor value={field.value || ""} onChange={field.onChange} />
+                      {/* <Textarea
+                        className="min-h-[120px]"
+                        placeholder="Description"
+                        {...field}
+                      /> */}
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Thumbnail */}
+              <FormField
+                control={form.control}
+                name="fileKey"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Thumbnail Image</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Thumbnail URL" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex gap-5">
+                {/* Category */}
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Category</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {courseCategories.map((category) => (
+                              <SelectItem key={category} value={category}>
+                                {category}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* level */}
+                <FormField
+                  control={form.control}
+                  name="level"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Level</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select value" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {courseLevels.map((category) => (
+                              <SelectItem key={category} value={category}>
+                                {category}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex gap-5">
+                {/* duratuon */}
+                <FormField
+                  control={form.control}
+                  name="duration"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Duration (hours)</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Duration"
+                          type="number"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* duratuon */}
+                <FormField
+                  control={form.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Price (Rp)</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Duration"
+                          type="number"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* level */}
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Status</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {courseStatus.map((category) => (
+                            <SelectItem key={category} value={category}>
+                              {category}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className={buttonVariants({
+                  variant: "default",
+                  className: "mt-4",
+                })}
+              >
+                Create Course <PlusIcon className="ml-1" size={16} />
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </>
   );
 }
