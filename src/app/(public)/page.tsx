@@ -1,10 +1,6 @@
 "use client";
 
-import ModeToggle from "@/components/ui/themeToggle";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -43,18 +39,7 @@ const features:featureProps[] = [
 ];
 
 export default function Home() {
-  const router = useRouter();
-  const { data: session } = authClient.useSession();
 
-  const handleSignOut = async () => {
-    try {
-      await authClient.signOut();
-      router.push("/");
-      toast.success("signout successfully");
-    } catch (error) {
-      console.error("Sign out failed:", error);
-    }
-  };
 
   return (
     <>

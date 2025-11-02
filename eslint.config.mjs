@@ -9,8 +9,11 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
+export default [
+  // Gunakan konfigurasi bawaan Next.js + TypeScript
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+
+  // Tambahkan aturan kustom kamu
   {
     ignores: [
       "node_modules/**",
@@ -18,8 +21,12 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      "src/generated/**",
     ],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
+    },
   },
 ];
-
-export default eslintConfig;

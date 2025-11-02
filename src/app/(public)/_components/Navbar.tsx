@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -40,7 +40,11 @@ export function Navbar() {
           <div className="flex items-center space-x-4">
             <ModeToggle />
             {isPending ? null : session ? (
-          <UserDropdown/>
+              <UserDropdown
+                name={session.user.name}
+                image={session.user.image || ""}
+                email={session.user.email}
+              />
             ) : (
               <>
                 <Link
@@ -49,10 +53,7 @@ export function Navbar() {
                 >
                   Login
                 </Link>
-                <Link
-                  href="login"
-                  className={buttonVariants()}
-                >
+                <Link href="login" className={buttonVariants()}>
                   Get Started
                 </Link>
               </>
