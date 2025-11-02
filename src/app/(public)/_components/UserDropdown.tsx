@@ -5,7 +5,6 @@ import {
   LayoutDashboardIcon,
   LogOutIcon,
 } from "lucide-react";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,9 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
+import { useSignOut } from "@/hooks/use-signout";
 
 interface iAppProps{
   name:string;
@@ -29,19 +26,9 @@ interface iAppProps{
 }
 
 export function UserDropdown({email,name,image}:iAppProps) {
-  const router = useRouter();
 
-  const { data: session } = authClient.useSession();
+   const handleSignOut = useSignOut();
 
-  const handleSignOut = async () => {
-    try {
-      await authClient.signOut();
-      router.push("/");
-      toast.success("signout successfully");
-    } catch (error) {
-      console.error("Sign out failed:", error);
-    }
-  };
 
   return (
     <DropdownMenu>
