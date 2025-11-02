@@ -1,1 +1,8 @@
 npx @better-auth/cli generate
+
+library
+https://env.t3
+resend.com
+neon
+better auth
+prisma
