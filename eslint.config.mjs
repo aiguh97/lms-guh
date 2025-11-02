@@ -10,10 +10,10 @@ const compat = new FlatCompat({
 });
 
 export default [
-  // Gunakan konfigurasi bawaan Next.js + TypeScript
+  // Gunakan konfigurasi bawaan Next.js
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 
-  // Tambahkan aturan kustom kamu
+  // Konfigurasi tambahan untuk override rule
   {
     ignores: [
       "node_modules/**",
@@ -21,7 +21,7 @@ export default [
       "out/**",
       "build/**",
       "next-env.d.ts",
-      "src/generated/**",
+      "src/generated/**", // abaikan folder hasil Prisma generate
     ],
     rules: {
       "@typescript-eslint/no-require-imports": "off",
