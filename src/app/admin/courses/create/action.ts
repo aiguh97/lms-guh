@@ -2,8 +2,10 @@
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+// import { prisma } from "@/lib/db";
 import { ApiResponse } from "@/lib/types";
 import { courseSchema, CourseSchemaType } from "@/lib/zodSchemas";
+// import { Prisma } from "@prisma/client";
 import { headers } from "next/headers";
 
 export async function CreateCourse(
