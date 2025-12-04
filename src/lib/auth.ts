@@ -1,5 +1,3 @@
-import "server-only";
-
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@/lib/db"; // pastikan path ini sesuai dengan lokasi db.ts
