@@ -1,13 +1,16 @@
-import "dotenv/config"; // ← ini wajib, agar DATABASE_URL terbaca
+// prisma.config.ts
+import "dotenv/config";
 import { defineConfig, env } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
+
   migrations: {
     path: "prisma/migrations",
   },
-  engine: "classic",
+
   datasource: {
-    url: env("DATABASE_URL"),
+    // provider: "postgresql",
+    url: env("DATABASE_URL"), // INI YANG WAJIB!
   },
 });

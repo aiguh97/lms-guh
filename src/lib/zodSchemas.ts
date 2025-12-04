@@ -1,19 +1,39 @@
 import { object, z } from "zod";
 
-export const courseLevels = ["Beginner", "Intermediate", "Advanced"] as const;
-export const courseStatus = ["Draft", "Published", "Archived"] as const;
-export const courseCategories =[
+
+// export const courseStatus = ["Draft", "Published", "Archived"] as const;
+// export const courseLevels = ["Beginner", "Intermediate", "Advanced"] as const;
+// export const courseCategories =[
+//   "Development",
+//   "Business",
+//   "Finance",
+//   "It & Software",
+//   "Office productivity",
+
+//   "Design",
+//   "Marketing",
+//   "Music",
+//   "Teaching & Academics"
+// ]as const;
+export const courseLevels = [
+  "Beginner",
+  "Intermediate",
+  "Advanced",
+] as const;
+
+export const courseCategories = [
   "Development",
   "Business",
   "Finance",
   "It & Software",
-  "Office productivity",
-
   "Design",
   "Marketing",
   "Music",
-  "Teaching & Academics"
-]as const;
+  "Teaching & Academics",
+] as const;
+
+export const courseStatus = ["Draft", "Published"] as const;
+
 
 export const courseSchema = z.object({
   title: z
@@ -24,8 +44,8 @@ export const courseSchema = z.object({
     .string()
     .min(3, { message: "Description must be at least 3 characters length" }),
   fileKey: z.string().min(1, { message: "File is required" }),
-  price: z.number({ message: "Price is required" }),
-  duration: z.number({ message: "Duration is required" }),
+ duration: z.coerce.number().min(1, "Duration is required"),
+  price: z.coerce.number().min(1, "Price is required"),
   level: z.enum(courseLevels, { message: "Level is required" }),
   category: z.enum(courseCategories,{
     message:'Category is required'

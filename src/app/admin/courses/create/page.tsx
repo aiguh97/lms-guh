@@ -15,7 +15,7 @@ import {
   CourseSchemaType,
   courseStatus,
 } from "@/lib/zodSchemas";
-import { ArrowLeft, PlusIcon, SparkleIcon } from "lucide-react";
+import { ArrowLeft, Loader2, PlusIcon, SparkleIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,10 +38,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RichTextEditor } from "@/components/rich-text-editor/Editor";
+import { Uploader } from "@/components/file-uploader/Uploader";
+import { useTransition } from "react";
+import { tryCatch } from "@/hooks/try-catch";
+import { CreateCourse } from "./action";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function CourseCreationPage() {
+
+  const [isPending,startTransition]= useTransition();
+  const router = useRouter()
+
   const form = useForm<CourseSchemaType>({
-    resolver: zodResolver(courseSchema),
+    // resolver: zodResolver(courseSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -57,7 +67,21 @@ export default function CourseCreationPage() {
   });
 
   function onSubmit(values: CourseSchemaType) {
-    console.log(values);
+   startTransition(async()=>{
+    const {data:result,error}= await tryCatch(CreateCourse(values))
+
+    if(error){
+      toast.error('An unexpected error ocurred. please try again')
+      return
+    }
+    if(result.status==='success'){
+      toast.success(result.message)
+      form.reset()
+      router.push("/admin/courses")
+    }else if(result.status==="error"){
+toast.success(result.message)
+    }
+   })
   }
 
   return (
@@ -151,7 +175,10 @@ export default function CourseCreationPage() {
                   <FormItem className="w-full">
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                    <RichTextEditor value={field.value || ""} onChange={field.onChange} />
+                      <RichTextEditor
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                      />
                       {/* <Textarea
                         className="min-h-[120px]"
                         placeholder="Description"
@@ -171,7 +198,7 @@ export default function CourseCreationPage() {
                   <FormItem className="w-full">
                     <FormLabel>Thumbnail Image</FormLabel>
                     <FormControl>
-                      <Input placeholder="Thumbnail URL" {...field} />
+                      <Uploader onChange={field.onChange} value={field.value} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -256,7 +283,7 @@ export default function CourseCreationPage() {
                     </FormItem>
                   )}
                 />
-                {/* duratuon */}
+                {/* price */}
                 <FormField
                   control={form.control}
                   name="price"
@@ -307,13 +334,19 @@ export default function CourseCreationPage() {
 
               {/* Submit Button */}
               <Button
+
                 type="submit"
+                disabled={isPending}
                 className={buttonVariants({
                   variant: "default",
                   className: "mt-4",
                 })}
               >
-                Create Course <PlusIcon className="ml-1" size={16} />
+               {isPending?(<>Creatingg... <Loader2 className="animate-spin ml-1"/></>):(
+                <>
+                 Create Course <PlusIcon className="ml-1" size={16} />
+                </>
+               )}
               </Button>
             </form>
           </Form>
